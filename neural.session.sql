@@ -1,1 +1,0 @@
-SELECT * from layerone_bias
