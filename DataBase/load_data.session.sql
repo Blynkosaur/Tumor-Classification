@@ -5,7 +5,7 @@ create table BC_DATA (
     id int
 )
 -- @block
-LOAD DATA INFILE '~/Tumor-Classification/breast-cancer.csv' into table BC_DATA
+LOAD DATA INFILE '../data/breast-cancer.csv' into table BC_DATA
 FIELDS TERMINATED BY ','
 IGNORE 1 LINES;
 
