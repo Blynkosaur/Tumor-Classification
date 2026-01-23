@@ -12,13 +12,10 @@ from neuralnetwork import (
     ReLU,
 )
 import numpy as np
-import pandas as pd
 from Saving_Weights import save
 from loading_weights import load_weights
 from load_data import load_data, standardize
 from test import test
-import mysql.connector
-import os
 
 features = [
     "radius_mean",
@@ -57,7 +54,7 @@ finalact = Sigmoid("finalact")
 network = [layer1, act1, layer2, act2, layer3, act3, layer4, finalact]
 
 # (network,alpha,epochs,loss, loss_prime,x,y,prin = True)
-# train(network,1e-5,2000,bce,bce_prime,X,Y,True)
+# train(network, 1e-5, 2000, bce, bce_prime, X, Y, True)
 # save(network)
 load_weights(network)
 
