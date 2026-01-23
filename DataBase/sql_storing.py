@@ -4,38 +4,70 @@ import os
 import numpy as np
 
 # Expand the tilde to your actual home directory path
-file_path = os.path.expanduser("~/password/sql.txt")
+password_file = os.path.expanduser("~/password/sql.txt")
+
+# Python type to MySQL type mapping
+TYPE_MAP = {
+    'int64': 'INT',
+    'float64': 'FLOAT',
+    'str': 'VARCHAR(255)',
+    'object': 'VARCHAR(255)',
+    'bool': 'BOOLEAN'
+}
 
 
-def get_header(file_path):
+def get_columns_with_types(file_path):
+    """Read CSV and return column names with their SQL types."""
     data = pd.read_csv(file_path)
-    sample = np.array(data)[0]
-    column_headers = list(data.columns.values)
-    hashmap = {}
-    for head in range(len(column_headers)):
-        data_type = str(type(sample[head]))
-        ls = data_type.split("'")
-        if ls[1] == "str":
-            hashmap[column_headers[head]] = "char"
-        else:
-            hashmap[column_headers[head]] = ls[1]
-
-    print(hashmap)
-    return hashmap
+    columns = {}
+    for col in data.columns:
+        dtype = str(data[col].dtype)
+        sql_type = TYPE_MAP.get(dtype, 'VARCHAR(255)')
+        columns[col] = sql_type
+    return columns, data
 
 
-file = open(file_path, "r")
-password = file.readline()
+def create_table_if_not_exists(cursor, table_name, columns):
+    """Create table with all columns in a single statement."""
+    col_defs = ", ".join([f"`{col}` {dtype}" for col, dtype in columns.items()])
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({col_defs})")
+
+
+def insert_data_bulk(cursor, table_name, data):
+    """Insert all data using bulk insert."""
+    if data.empty:
+        return
+    
+    columns = ", ".join([f"`{col}`" for col in data.columns])
+    placeholders = ", ".join(["%s"] * len(data.columns))
+    query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+    
+    # Convert DataFrame to list of tuples
+    values = [tuple(row) for row in data.values]
+    cursor.executemany(query, values)
+
+
+# Connect to database
+with open(password_file, "r") as f:
+    password = f.readline().strip()
+
 mydb = mysql.connector.connect(
     host="localhost", user="root", password=password, database="neuralnetwork"
 )
-bc_file = os.path.expanduser("../data/breast-cancer.csv")
-headers = get_header("../data/breast-cancer.csv")
 mycursor = mydb.cursor()
 
-mycursor.execute("drop table BC_DATA")
-mycursor.execute(f"create table BC_DATA (id {headers['id']} )")
-for header in headers:
-    if header != "id":
-        mycursor.execute(f"alter table BC_DATA add {
-                         header} {headers[header]} ")
+# Load and process breast cancer data
+bc_file = "../data/breast-cancer.csv"
+columns, data = get_columns_with_types(bc_file)
+
+# Create table if it doesn't exist, then clear existing data
+create_table_if_not_exists(mycursor, "BC_DATA", columns)
+mycursor.execute("TRUNCATE TABLE BC_DATA")
+
+# Bulk insert all data
+insert_data_bulk(mycursor, "BC_DATA", data)
+mydb.commit()
+
+print(f"Inserted {len(data)} rows into BC_DATA")
+mycursor.close()
+mydb.close()
