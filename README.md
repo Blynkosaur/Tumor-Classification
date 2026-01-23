@@ -44,6 +44,7 @@ Then comment out `load_weights(network)` to avoid overwriting with old weights b
 ### How Weights are Stored
 
 Weights are saved as CSV files in `Model_Weights/`:
+
 - `{layer_name}_weights.csv` - weight matrices
 - `{layer_name}_bias.csv` - bias vectors
 
@@ -54,4 +55,4 @@ This keeps things simple and human-readable. No need for pickle or database stor
 - numpy
 - pandas
 - scikit-learn
-- mysql-connector-python (only if using database features)
+- mysql-connector-python (only if using database features -- I ran a local MySQL DB on my computer so get your own server :|)
