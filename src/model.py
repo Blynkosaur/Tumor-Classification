@@ -35,7 +35,7 @@ features = [
     "concave_points_worst",
 ]
 train_x, train_y, test_x, test_y, length = load_data(
-    "./data/breast-cancer.csv", features, 0.2
+    "../data/breast-cancer.csv", features, 0.2
 )
 train_x = standardize(train_x)
 test_x = standardize(test_x)
