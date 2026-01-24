@@ -55,4 +55,5 @@ This keeps things simple and human-readable. No need for pickle or database stor
 - numpy
 - pandas
 - scikit-learn
-- mysql-connector-python (only if using database features -- I ran a local MySQL DB on my computer so get your own server :|)
+- mysql-connector-python (only if using database features)
+- I ran a local MySQL DB on my computer, so get your own server :|
