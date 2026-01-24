@@ -12,11 +12,11 @@ def save(network):
     for weight in weights:
         #for weights
         dw = pd.DataFrame(weights[weight])
-        filename = f"../Model_Weights/{weight}_weights.csv"
+        filename = f"../model_weights/{weight}_weights.csv"
         dw.to_csv(filename, index=False, header=False)  # Save without headers for simplicity
         print(f"Saved {weight} to {filename}")
         #for biases
         db = pd.DataFrame(bias[weight])
-        filename = f"../Model_Weights/{weight}_bias.csv"
+        filename = f"../model_weights/{weight}_bias.csv"
         db.to_csv(filename, index=False, header=False)  # Save without headers for simplicity
         print(f"Saved {weight} to {filename}")

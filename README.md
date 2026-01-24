@@ -12,9 +12,9 @@ This is a personal project for the initiation to real life applications of machi
 │   ├── Saving_Weights.py  # Save weights to CSV
 │   ├── loading_weights.py # Load weights from CSV
 │   └── test.py            # Model evaluation
-├── Model_Weights/         # Trained weights (CSV format)
+├── model_weights/         # Trained weights (CSV format)
 ├── notebooks/             # Jupyter notebooks for exploration
-└── DataBase/              # Optional MySQL storage (not required)
+└── database/              # Optional MySQL storage (not required)
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ cd src
 python model.py
 ```
 
-This will load the pre-trained weights from `Model_Weights/` and evaluate the model on the test set, printing accuracy, precision, and recall.
+This will load the pre-trained weights from `model_weights/` and evaluate the model on the test set, printing accuracy, precision, and recall.
 
 ### Training from Scratch
 
@@ -43,7 +43,7 @@ Then comment out `load_weights(network)` to avoid overwriting with old weights b
 
 ### How Weights are Stored
 
-Weights are saved as CSV files in `Model_Weights/`:
+Weights are saved as CSV files in `model_weights/`:
 
 - `{layer_name}_weights.csv` - weight matrices
 - `{layer_name}_bias.csv` - bias vectors
